@@ -6,25 +6,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Agentics Livestream</title>
-<!-- Marketing: move the brand files to the main site and Access-Control-Allow-Origin: https://livestream.agentics.org -->
-<link rel="stylesheet" href="https://agentics.org/brand/agentics-brand.css">
-<link rel="icon" href="https://agentics.org/favicon.ico">
+
+<link id="brandStylesheet" rel="stylesheet">
+<link id="brandFavicon" rel="icon">
+
+<!-- Load editable configuration -->
+<script src="/config.js"></script>
 
 <script>
-
 /* =====================================================
-   CONFIGURATION
+   Video selection
    ===================================================== */
 
-const VIDEO_ID_DEFAULT = "jfKfPfyJRdk";
-
-/* Optional meeting link (Zoom / Google Meet etc.) */
-const MEETING_URL = "";
-
-/* ===================================================== */
-
-function getVideoId(){
-
+function getVideoId() {
   const url = new URL(window.location.href);
 
   return (
@@ -33,13 +27,10 @@ function getVideoId(){
     window.location.hash.substring(1) ||
     VIDEO_ID_DEFAULT
   );
-
 }
-
 </script>
 
 <style>
-
 body{
 margin:0;
 background:var(--agentics-bg);
@@ -75,6 +66,7 @@ height:42px;
 display:flex;
 gap:12px;
 align-items:center;
+flex-wrap:wrap;
 }
 
 .grid{
@@ -121,7 +113,6 @@ box-shadow:var(--agentics-shadow);
 }
 
 @media(max-width:1000px){
-
 .grid{
 grid-template-columns:1fr;
 }
@@ -129,9 +120,7 @@ grid-template-columns:1fr;
 .chat{
 height:500px;
 }
-
 }
-
 </style>
 
 </head>
@@ -146,7 +135,7 @@ height:500px;
 <header class="header agentics-card">
 
 <div class="brand">
-<img id="logo" src="https://agentics.org/favicon.ico">
+<img id="logo" alt="Agentics logo">
 <div>
 <div id="brandName">Agentics Foundation</div>
 <div id="brandTagline" style="font-size:13px;color:var(--agentics-muted)">
@@ -159,19 +148,20 @@ Livestream
 
 <a id="ytlink"
 class="agentics-pill agentics-pill-accent"
-target="_blank">
+target="_blank"
+rel="noopener noreferrer">
 Watch on YouTube
 </a>
 
 <a id="meetingButton"
 class="agentics-pill"
 target="_blank"
+rel="noopener noreferrer"
 style="display:none">
 Join Meeting
 </a>
 
-<a href="https://github.com/agenticsorg/livestream-pages/wiki"
-class="agentics-pill">
+<a href="/admin" class="agentics-pill">
 Admin
 </a>
 
@@ -200,36 +190,51 @@ Video ID: <span id="videoid"></span>
 </div>
 
 <script>
+/* =====================================================
+   Load brand assets from configured base
+   ===================================================== */
+
+document.getElementById("brandStylesheet").href =
+  `${BRAND_BASE_URL}/agentics-brand.css`;
+
+document.getElementById("brandFavicon").href =
+  `${BRAND_BASE_URL}/favicon.ico`;
+
+document.getElementById("logo").src =
+  `${BRAND_BASE_URL}/favicon.ico`;
+
+/* =====================================================
+   Video setup
+   ===================================================== */
 
 const VIDEO_ID = getVideoId();
 
 document.getElementById("videoid").textContent = VIDEO_ID;
 
 document.getElementById("ytplayer").src =
-`https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&mute=1`;
+  `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&mute=1`;
 
 document.getElementById("ytchat").src =
-`https://www.youtube.com/live_chat?v=${VIDEO_ID}&embed_domain=${location.hostname}`;
+  `https://www.youtube.com/live_chat?v=${VIDEO_ID}&embed_domain=${location.hostname}`;
 
 document.getElementById("ytlink").href =
-`https://youtube.com/watch?v=${VIDEO_ID}`;
+  `https://youtube.com/watch?v=${VIDEO_ID}`;
 
-/* Enable meeting button if configured */
+/* =====================================================
+   Meeting button logic
+   ===================================================== */
 
 const btn = document.getElementById("meetingButton");
 
-if(MEETING_URL){
-
-btn.href = MEETING_URL;
-btn.style.display = "inline-flex";
-
+if (MEETING_URL) {
+  btn.href = MEETING_URL;
+  btn.textContent = "Join Meeting";
+  btn.style.display = "inline-flex";
 } else {
-
-btn.href = "https://agentics.org/community/calendar";
-btn.style.display = "inline-flex";
-   
+  btn.href = "https://agentics.org/community/calendar";
+  btn.textContent = "View Calendar";
+  btn.style.display = "inline-flex";
 }
-
 </script>
 
 </body>
