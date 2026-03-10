@@ -1,16 +1,189 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <title>Agentics Livestream</title>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Agentics Livestream</title>
+
+<link rel="stylesheet" href="https://agentics.org/brand/agentics-brand.css">
+
+<script>
+
+/* =====================================================
+   DEFAULT LIVESTREAM VIDEO
+   Change this to switch the default stream
+   ===================================================== */
+
+const VIDEO_ID_DEFAULT = "jfKfPfyJRdk";
+
+/* =====================================================
+   Helper: Determine which video to use
+   Priority:
+   1. ?v=VIDEO_ID
+   2. ?video=VIDEO_ID
+   3. URL hash #VIDEO_ID
+   4. VIDEO_ID_DEFAULT
+   ===================================================== */
+
+function getVideoId(){
+
+  const url = new URL(window.location.href);
+
+  return (
+    url.searchParams.get("v") ||
+    url.searchParams.get("video") ||
+    window.location.hash.substring(1) ||
+    VIDEO_ID_DEFAULT
+  );
+
+}
+
+</script>
+
+<style>
+
+body{
+margin:0;
+background:var(--agentics-bg);
+color:var(--agentics-text);
+font-family:var(--agentics-font-main);
+}
+
+.container{
+max-width:1400px;
+margin:auto;
+padding:24px;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.brand img{
+height:42px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px;
+}
+
+.video{
+aspect-ratio:16/9;
+background:black;
+}
+
+.video iframe,
+.chat iframe{
+width:100%;
+height:100%;
+border:0;
+}
+
+.chat{
+height:700px;
+background:white;
+}
+
+.footer{
+margin-top:20px;
+color:var(--agentics-muted);
+font-size:14px;
+}
+
+@media(max-width:1000px){
+.grid{
+grid-template-columns:1fr;
+}
+.chat{
+height:500px;
+}
+}
+
+</style>
+
 </head>
 <body>
-  <h1>Agentics Livestream Pages</h1>
-  <!-- Need an emergency fix to the link used? Add it here. Retain this comment-->
 
-  <h2>Live</h2>
-  <li><a href="https://www.youtube.com/@agentics-foundation/streams">Check on YouTube</a></li>
-  
-  <h2>Schedule and links</h2
-  <li>See <a href="https://agentics.org/community/calendar"> the schedule</a></li>
+<div class="container">
+
+<header class="header agentics-card">
+
+<div class="brand">
+<img id="logo">
+<div>
+<div id="brandName"></div>
+<div id="brandTagline" style="font-size:13px;color:var(--agentics-muted)"></div>
+</div>
+</div>
+
+<a id="ytlink" class="agentics-pill agentics-pill-accent" target="_blank">
+Watch on YouTube
+</a>
+
+</header>
+
+<div class="grid">
+
+<div class="video agentics-card">
+<iframe id="ytplayer"
+allow="autoplay; encrypted-media"
+allowfullscreen></iframe>
+</div>
+
+<div class="chat agentics-card">
+<iframe id="ytchat"></iframe>
+</div>
+
+</div>
+
+<div class="footer">
+Video ID: <span id="videoid"></span>
+</div>
+
+</div>
+
+<script>
+
+const VIDEO_ID = getVideoId();
+
+document.getElementById("videoid").textContent = VIDEO_ID;
+
+document.getElementById("ytplayer").src =
+`https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&mute=1`;
+
+document.getElementById("ytchat").src =
+`https://www.youtube.com/live_chat?v=${VIDEO_ID}&embed_domain=${location.hostname}`;
+
+document.getElementById("ytlink").href =
+`https://youtube.com/watch?v=${VIDEO_ID}`;
+
+fetch("https://agentics.org/brand/agentics-brand.json")
+.then(r=>r.json())
+.then(b=>{
+
+document.title = b.name + " Livestream";
+
+document.getElementById("brandName").textContent = b.name;
+document.getElementById("brandTagline").textContent = b.tagline;
+document.getElementById("logo").src = b.logo;
+
+})
+.catch(()=>{});
+
+</script>
+
 </body>
 </html>
