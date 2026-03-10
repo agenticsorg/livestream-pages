@@ -1,0 +1,11 @@
+{
+  "name": "Agentics Foundation",
+  "tagline": "Building the Future of Agentic AI",
+  "logo": "https://agentics.org/logo.png",
+  "colors": {
+    "accent": "#f59e0b",
+    "accentSecondary": "#fb923c",
+    "background": "#0b1020",
+    "text": "#eef2ff"
+  }
+}
