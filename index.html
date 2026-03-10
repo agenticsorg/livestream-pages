@@ -7,43 +7,42 @@
 
 <title>Agentics Livestream</title>
 <!-- Marketing: move the brand files to the main site and Access-Control-Allow-Origin: https://livestream.agentics.org -->
-<link rel="stylesheet" href="https://livestream.agentics.org/brand/agentics-brand.css">
+
+<link rel="stylesheet" href="https://agentics.org/brand/agentics-brand.css">
+<link rel="icon" href="https://agentics.org/favicon.ico">
 
 <script>
-
 /* =====================================================
-   DEFAULT LIVESTREAM VIDEO
-   Change this to switch the default stream
+   DEFAULT CHANNEL / FALLBACK VIDEO
+   Set CHANNEL_ID_DEFAULT to the real YouTube channel ID
+   Example channel IDs look like: UCxxxxxxxxxxxxxxxxxxxxxx
    ===================================================== */
 
+const CHANNEL_ID_DEFAULT = "UCq_8ihSPx2E2elW6Vyx2cdg";
 const VIDEO_ID_DEFAULT = "jfKfPfyJRdk";
 
-/* =====================================================
-   Helper: Determine which video to use
-   Priority:
-   1. ?v=VIDEO_ID
-   2. ?video=VIDEO_ID
-   3. URL hash #VIDEO_ID
-   4. VIDEO_ID_DEFAULT
-   ===================================================== */
-
-function getVideoId(){
-
+function getChannelId() {
   const url = new URL(window.location.href);
+  return (
+    url.searchParams.get("channel") ||
+    url.searchParams.get("c") ||
+    window.location.hash.startsWith("#UC") ? window.location.hash.substring(1) : "" ||
+    CHANNEL_ID_DEFAULT
+  );
+}
 
+function getVideoId() {
+  const url = new URL(window.location.href);
   return (
     url.searchParams.get("v") ||
     url.searchParams.get("video") ||
-    window.location.hash.substring(1) ||
+    (!window.location.hash.startsWith("#UC") ? window.location.hash.substring(1) : "") ||
     VIDEO_ID_DEFAULT
   );
-
 }
-
 </script>
 
 <style>
-
 body{
 margin:0;
 background:var(--agentics-bg);
@@ -62,6 +61,7 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:20px;
+gap:16px;
 }
 
 .brand{
@@ -103,6 +103,26 @@ color:var(--agentics-muted);
 font-size:14px;
 }
 
+.home-button{
+position:fixed;
+top:16px;
+left:16px;
+z-index:1000;
+padding:8px 14px;
+border-radius:999px;
+text-decoration:none;
+font-weight:600;
+background:var(--agentics-accent);
+color:#111827;
+box-shadow:var(--agentics-shadow);
+}
+
+.status{
+margin-top:8px;
+font-size:13px;
+color:var(--agentics-muted);
+}
+
 @media(max-width:1000px){
 .grid{
 grid-template-columns:1fr;
@@ -111,25 +131,30 @@ grid-template-columns:1fr;
 height:500px;
 }
 }
-
 </style>
 
 </head>
 <body>
+
+<a class="home-button" href="https://agentics.org">
+← Agentics
+</a>
 
 <div class="container">
 
 <header class="header agentics-card">
 
 <div class="brand">
-<img id="logo">
+<img id="logo" src="https://agentics.org/favicon.ico" alt="Agentics">
 <div>
-<div id="brandName"></div>
-<div id="brandTagline" style="font-size:13px;color:var(--agentics-muted)"></div>
+<div id="brandName">Agentics Foundation</div>
+<div id="brandTagline" style="font-size:13px;color:var(--agentics-muted)">
+Livestream
+</div>
 </div>
 </div>
 
-<a id="ytlink" class="agentics-pill agentics-pill-accent" target="_blank">
+<a id="ytlink" class="agentics-pill agentics-pill-accent" target="_blank" rel="noopener noreferrer">
 Watch on YouTube
 </a>
 
@@ -139,7 +164,7 @@ Watch on YouTube
 
 <div class="video agentics-card">
 <iframe id="ytplayer"
-allow="autoplay; encrypted-media"
+allow="autoplay; encrypted-media; picture-in-picture"
 allowfullscreen></iframe>
 </div>
 
@@ -150,39 +175,48 @@ allowfullscreen></iframe>
 </div>
 
 <div class="footer">
-Video ID: <span id="videoid"></span>
+<div id="modeLabel"></div>
+<div id="idLabel" class="status"></div>
 </div>
 
 </div>
 
 <script>
-
+const CHANNEL_ID = getChannelId();
 const VIDEO_ID = getVideoId();
+const HAS_CHANNEL = CHANNEL_ID && CHANNEL_ID !== "REPLACE_WITH_CHANNEL_ID";
 
-document.getElementById("videoid").textContent = VIDEO_ID;
+const player = document.getElementById("ytplayer");
+const chat = document.getElementById("ytchat");
+const ytlink = document.getElementById("ytlink");
+const modeLabel = document.getElementById("modeLabel");
+const idLabel = document.getElementById("idLabel");
 
-document.getElementById("ytplayer").src =
-`https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&mute=1`;
+if (HAS_CHANNEL) {
+  player.src =
+    `https://www.youtube.com/embed/live_stream?channel=${encodeURIComponent(CHANNEL_ID)}&autoplay=1&mute=1`;
 
-document.getElementById("ytchat").src =
-`https://www.youtube.com/live_chat?v=${VIDEO_ID}&embed_domain=${location.hostname}`;
+  chat.src =
+    `https://www.youtube.com/live_chat?channel=${encodeURIComponent(CHANNEL_ID)}&embed_domain=${location.hostname}`;
 
-document.getElementById("ytlink").href =
-`https://youtube.com/watch?v=${VIDEO_ID}`;
+  ytlink.href =
+    `https://www.youtube.com/channel/${encodeURIComponent(CHANNEL_ID)}/live`;
 
-fetch("https://livestream.agentics.org/brand/agentics-brand.json")
-.then(r=>r.json())
-.then(b=>{
+  modeLabel.textContent = "Mode: channel live embed";
+  idLabel.textContent = `Channel ID: ${CHANNEL_ID}`;
+} else {
+  player.src =
+    `https://www.youtube.com/embed/${encodeURIComponent(VIDEO_ID)}?autoplay=1&mute=1`;
 
-document.title = b.name + " Livestream";
+  chat.src =
+    `https://www.youtube.com/live_chat?v=${encodeURIComponent(VIDEO_ID)}&embed_domain=${location.hostname}`;
 
-document.getElementById("brandName").textContent = b.name;
-document.getElementById("brandTagline").textContent = b.tagline;
-document.getElementById("logo").src = b.logo;
+  ytlink.href =
+    `https://youtube.com/watch?v=${encodeURIComponent(VIDEO_ID)}`;
 
-})
-.catch(()=>{});
-
+  modeLabel.textContent = "Mode: fallback fixed video";
+  idLabel.textContent = `Video ID: ${VIDEO_ID}`;
+}
 </script>
 
 </body>
