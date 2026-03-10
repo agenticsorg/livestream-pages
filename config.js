@@ -22,7 +22,7 @@ const BRAND_BASE_URL = "/brand";
     ?video=VIDEO_ID
     #VIDEO_ID
 */
-const VIDEO_ID_DEFAULT = "juuU0CcA0ag";
+const VIDEO_ID_DEFAULT = "CVkma6giYkM";
 
 /*
   Optional meeting link (Zoom / Google Meet etc.)
