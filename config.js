@@ -32,4 +32,13 @@ const VIDEO_ID_DEFAULT = "jfKfPfyJRdk";
 
   If left blank, the page will show a "View Calendar" button instead.
 */
-const MEETING_URL = "";
+const MEETING_URL = "https://us06web.zoom.us/j/84185718307?pwd=pXX1UjgYTYbz9ZPqztehg8lIdp15hj.1";
+
+/* Agentics YouTube channel */
+const YOUTUBE_CHANNEL_ID = "UCq_8ihSPx2E2elW6Vyx2cdg";
+
+/*
+We embed specific video IDs rather than the channel livestream
+because channel embeds require PUBLIC streams and do not
+work with unlisted broadcasts.
+*/
