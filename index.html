@@ -216,15 +216,14 @@ document.getElementById("ytlink").href =
 
 /* Enable meeting button if configured */
 
-if(MEETING_URL){
-
 const btn = document.getElementById("meetingButton");
+
+if(MEETING_URL){
 
 btn.href = MEETING_URL;
 btn.style.display = "inline-flex";
 
 } else {
-const btn = document.getElementById("meetingButton");
 
 btn.href = "https://agentics.org/community/calendar";
 btn.style.display = "inline-flex";
