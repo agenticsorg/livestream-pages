@@ -39,10 +39,10 @@ const CALENDAR_ICS_URL =
   Meeting links (fallback if calendar parsing not yet implemented)
 */
 const THURSDAY_MEETING_URL =
-  "https://us06web.zoom.us/meetings/81457783806/invitations?signature=v_gLoqcRTQb5nT4349KydO1NMCuiayMXq9r2I5L9BJU";
+  "https://us06web.zoom.us/j/81457783806?pwd=cCVc3FdQ92BHcooimWyjCFJbUmdhu0.1";
 
 const FRIDAY_MEETING_URL =
-  "https://us06web.zoom.us/j/83802209294?pwd=O17vytsA1UbZkX3hfvNXrNWIARDRtZ.1&jst=2";
+  "https://us06web.zoom.us/j/83802209294?pwd=O17vytsA1UbZkX3hfvNXrNWIARDRtZ.1";
 
 /*
   Determine current day in America/Toronto timezone
