@@ -1,44 +1,48 @@
-/* =====================================================
-   Livestream configuration
-   Edit this file only.
-   ===================================================== */
+/*
+  Meeting links by day
+*/
+const THURSDAY_MEETING_URL =
+  "https://us06web.zoom.us/meetings/81457783806/invitations?signature=v_gLoqcRTQb5nT4349KydO1NMCuiayMXq9r2I5L9BJU";
+
+const FRIDAY_MEETING_URL =
+  "https://us06web.zoom.us/j/83802209294?pwd=O17vytsA1UbZkX3hfvNXrNWIARDRtZ.1&jst=2";
 
 /*
-  Temporary arrangement:
-  brand assets are currently hosted on the livestream site.
-
-  Current:
-    /brand
-
-  Later, when moved to the main site, change to:
-    https://agentics.org/brand
+  Determine current day in America/Toronto
 */
-const BRAND_BASE_URL = "/brand";
+function getTorontoDay() {
+  const now = new Date();
 
-/*
-  Default livestream video ID.
-  This is used unless overridden by:
-    ?v=VIDEO_ID
-    ?video=VIDEO_ID
-    #VIDEO_ID
-*/
-const VIDEO_ID_DEFAULT = "hJhlPPxbcG4";
+  const torontoString = now.toLocaleString("en-US", {
+    timeZone: "America/Toronto",
+    weekday: "short"
+  });
+
+  const map = {
+    Sun: 0,
+    Mon: 1,
+    Tue: 2,
+    Wed: 3,
+    Thu: 4,
+    Fri: 5,
+    Sat: 6
+  };
+
+  return map[torontoString];
+}
 
 /*
   Optional meeting link (Zoom / Google Meet etc.)
 
-  Example:
-  const MEETING_URL = "https://us06web.zoom.us/j/83802209294?pwd=...";
-
-  If left blank, the page will show a "View Calendar" button instead.
+  Thursday  -> THURSDAY_MEETING_URL
+  Friday    -> FRIDAY_MEETING_URL
+  Other days -> blank (fallback to calendar)
 */
-const MEETING_URL = "https://us06web.zoom.us/meetings/81457783806/invitations?signature=v_gLoqcRTQb5nT4349KydO1NMCuiayMXq9r2I5L9BJU";
+const MEETING_URL = (() => {
+  const day = getTorontoDay();
 
-/* Agentics YouTube channel */
-const YOUTUBE_CHANNEL_ID = "UCq_8ihSPx2E2elW6Vyx2cdg";
+  if (day === 4) return THURSDAY_MEETING_URL;
+  if (day === 5) return FRIDAY_MEETING_URL;
 
-/*
-We embed specific video IDs rather than the channel livestream
-because channel embeds require PUBLIC streams and do not
-work with unlisted broadcasts.
-*/
+  return "";
+})();
