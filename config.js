@@ -1,5 +1,42 @@
+/* =====================================================
+   Livestream configuration
+   Edit this file only.
+   ===================================================== */
+
 /*
-  Meeting links by day
+  Temporary arrangement:
+  brand assets are currently hosted on the livestream site.
+
+  Current:
+    /brand
+
+  Later, when moved to the main site, change to:
+    https://agentics.org/brand
+*/
+const BRAND_BASE_URL = "/brand";
+
+/*
+  Default livestream video ID.
+  This is used unless overridden by:
+    ?v=VIDEO_ID
+    ?video=VIDEO_ID
+    #VIDEO_ID
+*/
+const VIDEO_ID_DEFAULT = "hJhlPPxbcG4";
+
+/*
+  Agentics YouTube channel
+*/
+const YOUTUBE_CHANNEL_ID = "UCq_8ihSPx2E2elW6Vyx2cdg";
+
+/*
+  Google Calendar ICS feed (source of truth)
+*/
+const CALENDAR_ICS_URL =
+  "https://calendar.google.com/calendar/ical/agent%40agentics.org/public/basic.ics";
+
+/*
+  Meeting links (fallback if calendar parsing not yet implemented)
 */
 const THURSDAY_MEETING_URL =
   "https://us06web.zoom.us/meetings/81457783806/invitations?signature=v_gLoqcRTQb5nT4349KydO1NMCuiayMXq9r2I5L9BJU";
@@ -8,7 +45,7 @@ const FRIDAY_MEETING_URL =
   "https://us06web.zoom.us/j/83802209294?pwd=O17vytsA1UbZkX3hfvNXrNWIARDRtZ.1&jst=2";
 
 /*
-  Determine current day in America/Toronto
+  Determine current day in America/Toronto timezone
 */
 function getTorontoDay() {
   const now = new Date();
@@ -32,11 +69,13 @@ function getTorontoDay() {
 }
 
 /*
-  Optional meeting link (Zoom / Google Meet etc.)
+  Optional meeting link (fallback logic)
+
+  This will be replaced by calendar-driven logic later.
 
   Thursday  -> THURSDAY_MEETING_URL
   Friday    -> FRIDAY_MEETING_URL
-  Other days -> blank (fallback to calendar)
+  Other days -> blank (fallback to calendar UI)
 */
 const MEETING_URL = (() => {
   const day = getTorontoDay();
@@ -46,3 +85,9 @@ const MEETING_URL = (() => {
 
   return "";
 })();
+
+/*
+We embed specific video IDs rather than the channel livestream
+because channel embeds require PUBLIC streams and do not
+work with unlisted broadcasts.
+*/
